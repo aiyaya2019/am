@@ -1,0 +1,163 @@
+<include file='common/meta' />
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form" lay-filter="layuiadmin-form-admin" style="padding: 20px 30px 1px 0;">
+            <form action="" class="layui-form">
+                <input type="hidden" name="id" value="{:input('id')}">
+                <!-- <input type="hidden" name="type" value="1"> -->
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">满</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="full_price" value="{$list.full_price}" lay-verify="required" autocomplete="off" placeholder="￥0.00" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid" style="margin-left:10px">减</div>
+                    <div class="layui-input-inline">
+                        <input type="text" name="less_price" value="{$list.less_price}" lay-verify="required" autocomplete="off" placeholder="￥0.00" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid layui-word-aux">满多少减多少</div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">选择门店</label>
+                    <div class="layui-input-block">
+                    <input type="radio" name="type" value="1" title="所有门店" lay-filter="goods" <if condition="$list.type eq 1 OR empty($list)">checked</if> >
+                    <input type="radio" name="type" value="2" title="指定门店" lay-filter="goods" <if condition="$list.type eq 2">checked</if> >
+                    </div>
+                </div>
+
+                  <div class="layui-form-item goods" style="display: none">
+                    <label class="layui-form-label">请选择门店</label>
+                    <div class="layui-input-block">
+                     <if condition="empty($list)">
+                         <foreach name="goods" item="v">
+                         <input type="checkbox" name="goods_id[]" title="{$v.title}" value="{$v.id}">
+                        </foreach>
+                     <else/>
+                          <foreach name="goods" item="v">
+                          <input type="checkbox" name="goods_id[]" title="{$v.title}" value="{$v.id}" <if condition="in_array($v.id,$list.goods_id)">checked</if>>
+                         </foreach>
+                     </if>
+                    </div>
+                  </div>
+
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">选择服务</label>
+                    <div class="layui-input-block">
+                    <input type="radio" name="service" value="1" title="所有服务" lay-filter="comp" <if condition="$list.service eq 1 OR empty($list)">checked</if> >
+                    <input type="radio" name="service" value="2" title="指定服务" lay-filter="comp" <if condition="$list.service eq 2">checked</if> >
+                    </div>
+                </div>
+
+                 <div class="layui-form-item comp" style="display: none">
+                    <label class="layui-form-label">请选择服务</label>
+                    <div class="layui-input-block ajax-service">
+                     <if condition="!empty($list)">
+                          <foreach name="comp" item="v">
+                          <input type="checkbox" name="comp_id[]" title="{$v.title}" value="{$v.id}" <if condition="in_array($v.id,$list.comp_id)">checked</if>>
+                         </foreach>
+                     </if>
+                    </div>
+                  </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">有效天数</label>
+                    <div class="layui-input-block">
+                       <input type="text" name="day" value="{$list.day}" lay-verify="required" autocomplete="off" placeholder="请输入内容" class="layui-input">
+                       <div class="layui-form-mid layui-word-aux">用户领取后，多少天内有效</div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">发放数量</label>
+                    <div class="layui-input-block">
+                       <input type="number" name="num" value="{$list.num}" lay-verify="required" autocomplete="off" placeholder="请输入内容" class="layui-input">
+                    </div>
+                </div>
+
+
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-inline">
+                        <input type="button" lay-submit id="transmit" lay-filter="LAY-user-back-submit" value="确认" class="layui-btn">
+                        <button type="reset" class="layui-btn layui-btn-primary" onclick="javascript:history.go(-1)">返回</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['form'],function(){
+        var form = layui.form;
+
+        //监听复选框 指定门店
+        form.on('radio(goods)', function(data){
+            var val = data.value; //被点击的radio的value值
+
+            if(val == 1){
+                $('.goods').hide();
+            }else{
+                $('.goods').show();
+            }
+        });
+
+        //监听单选框 指定服务
+        form.on('radio(comp)', function(data){
+            var val = data.value; //被点击的radio的value值
+
+            if(val == 1){
+                $('.comp').hide();//所有服务
+            }else{
+
+                var type = $('input[name="type"]:checked').val();
+                 $('.comp').show();//指定服务
+                if (type == 1){
+                    //所有门店
+                    var str = 0;
+
+                }else{
+                    //指定门店
+                    var arr = [];
+                    $('input:checkbox[name="goods_id[]"]:checked').each(function(){
+                        arr.push($(this).val());
+                    })
+                   var str =  arr.join(',');
+                   if (!str){
+                       str = 0;
+                   }
+
+                }
+
+                   //发送ajax获取门店服务
+                   $.ajax({
+                      type: "POST",
+                      url: "{:url('Coupon/service')}",
+                      dataType:"JSON",
+                      data: {id:str},
+                      success: function(data){
+
+                        if (data.code == 200){
+                            var service = '';
+                            for (var k in data.data){
+                                service +=  '<input type="checkbox" name="comp_id[]" title="'+data.data[k]['title']+'" value="'+data.data[k]['id']+'">';
+                            }
+
+                            $('.ajax-service').append(service);
+                            form.render();
+                        }
+                      }
+                   });
+
+            }
+        });
+
+
+    })
+
+
+    //表单上传
+    fromUpload('form',"{:url('Coupon/save')}");
+</script>

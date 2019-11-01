@@ -1,0 +1,286 @@
+<include file='common/meta' />
+<style>
+    .layui-upload-img{width: 92px; height: 92px; margin: 0 10px 10px 0;border:1px solid #eee;}
+    .spec{float:right;width:80%;margin: 0 5px 10px 3px}
+    .remove{width:4% !important;margin:10px 0 0 0;color:#FF5722;cursor:pointer;}
+    .removes{color:#FF5722;cursor:pointer;}
+    .layui-input-inline{margin-right:2px !important;}
+    .layui-unselect{float:left;}
+    .pane{width:13% !important;}
+    #l-map{height:400px;}
+    #r-result{width:100%;}
+</style>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form" lay-filter="layuiadmin-form-admin" style="padding: 20px 30px 1px 0;">
+            <form action="" class="layui-form">
+                <input type="hidden" name="id" id="goods_id" value="{:input('id')}">
+                 <input type="hidden" name="jingdu" value="{$goods.jingdu}">
+                 <input type="hidden" name="weidu" value="{$goods.weidu}">
+                 <div class="layui-form-item">
+                    <label class="layui-form-label">所属城市</label>
+                    <div class="layui-input-block">
+                        <select name="type_id" id="" lay-verify="required" lay-search>
+                            <option value="">请选择所属城市</option>
+                            <foreach name="type" item="vo">
+                                <optgroup label="{$vo.title}">
+                                    <foreach name="$vo.this" item="v">
+                                        <option value="{$v.id}" <if condition="$goods.type_id eq $v.id">selected</if>>{$v.title}</option>
+                                    </foreach>
+                                </optgroup>
+                            </foreach>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">门店名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" value="{$goods.title}" lay-verify="required" autocomplete="off" placeholder="请输入内容" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">门店封面</label>
+                    <div class="layui-input-block layui-upload">
+                        <button type="button" class="layui-btn layui-btn-normal file" id="test1"><i class="layui-icon"></i>上传封面</button>
+                        <input class="layui-upload-file" type="file" accept="undefined" name="file" id="test1s">
+                        <span class="layui-inline layui-upload-choose">支持 png、jpg、jpeg 格式文件</span>
+                    </div>
+                     <label class="layui-form-label"></label>
+                    <div style="margin-top:10px" id="video_val">
+                        <img src="{$goods.pic}" style="width:200px" id="img">
+                    </div>
+                </div>
+
+                 <div class="layui-form-item">
+                    <label class="layui-form-label">额外福利</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="welfare" value="{$goods.welfare}"  autocomplete="off" placeholder="请输入内容" class="layui-input">
+                    </div>
+                </div>
+
+                 <div class="layui-form-item">
+                    <label class="layui-form-label">门店活动</label>
+                    <div class="layui-input-block">
+                     <if condition="empty($goods)">
+
+                         <input type="checkbox" name="activity_id[]" title="新用户首单满{$config['man']}减{$config['jian']}" value="1">
+                         <input type="checkbox" name="activity_id[]" title="邀请好友奖励{$config['friend_money']}元" value="2">
+
+                     <else/>
+                          <input type="checkbox" name="activity_id[]" title="新用户首单满{$config['man']}减{$config['jian']}" value="1" <if condition="in_array(1,$goods.activity_id)">checked</if>>
+                          <input type="checkbox" name="activity_id[]" title="邀请好友奖励{$config['friend_money']}元" value="2" <if condition="in_array(2,$goods.activity_id)">checked</if>>
+                     </if>
+                    </div>
+                  </div>
+
+                     <div class="layui-form-item">
+                       <label class="layui-form-label">开业状态</label>
+                       <div class="layui-input-block">
+                        <if condition="$goods.status">
+                         <input type="radio" name="status" value="1" title="正在营业" <if condition="$goods.status eq 1">checked<else /></if>>
+                         <input type="radio" name="status" value="2" title="即将开业" <if condition="$goods.status eq 2">checked<else /></if>>
+                         <else />
+                          <input type="radio" name="status" value="1" title="正在营业" checked>
+                           <input type="radio" name="status" value="2" title="即将开业">
+                         </if>
+                       </div>
+                     </div>
+
+                     <div class="layui-form-item">
+                       <label class="layui-form-label">是否参加bang权益</label>
+                       <div class="layui-input-block">
+                        <if condition="$goods.bang">
+                         <input type="radio" name="bang" value="1" title="参加" <if condition="$goods.bang eq 1">checked<else /></if>>
+                         <input type="radio" name="bang" value="2" title="不参加" <if condition="$goods.bang eq 2">checked<else /></if>>
+                         <else />
+                          <input type="radio" name="bang" value="1" title="参加" checked>
+                           <input type="radio" name="bang" value="2" title="不参加">
+                         </if>
+                       </div>
+                     </div>
+
+                 <div class="layui-form-item">
+                   <label class="layui-form-label">营业时间</label>
+                   <if condition="$goods.start_time neq 0">
+                   <div class="layui-input-inline">
+                       <input type="text" name="start_time" id="start_time" value="{$goods.start_time|date='H:i:s',###}" lay-verify="required" autocomplete="off" placeholder="开始时间" class="layui-input">
+                   </div>
+                   <div class="layui-form-mid">-</div>
+                   <div class="layui-input-inline">
+                       <input type="text" name="end_time" id="end_time" value="{$goods.end_time|date='H:i:s',###}" lay-verify="required" autocomplete="off" placeholder="结束时间" class="layui-input">
+                   </div>
+                   <else />
+                      <div class="layui-input-inline">
+                      <input type="text" name="start_time" id="start_time" value="" lay-verify="required" autocomplete="off" placeholder="开始时间" class="layui-input">
+                      </div>
+                      <div class="layui-form-mid">-</div>
+                      <div class="layui-input-inline">
+                          <input type="text" name="end_time" id="end_time" value="" lay-verify="required" autocomplete="off" placeholder="结束时间" class="layui-input">
+                      </div>
+                   </if>
+               </div>
+
+
+                 <div class="layui-form-item">
+                    <label class="layui-form-label">手机号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="phone" value="{$goods.phone}" lay-verify="required" autocomplete="off" placeholder="请输入手机号" class="layui-input">
+                    </div>
+                </div>
+
+                 <div class="layui-form-item">
+                    <label class="layui-form-label">密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" name="pwd" value="{$goods.pwd}" lay-verify="required" autocomplete="off" placeholder="请输入密码" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item" id="r-result">
+                    <label class="layui-form-label">门店地址</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="address" value="{$goods.address}" lay-verify="required" autocomplete="off" placeholder="从地图中自动获取"  class="layui-input">
+                    </div>
+                </div>
+
+                 <div class="layui-form-item" id="r-result">
+                    <label class="layui-form-label">地图标点</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="" value=""  autocomplete="off" placeholder="请输入内容" id="suggestId" class="layui-input">
+                    </div>
+                </div>
+
+                 <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
+                <div class="layui-form-item">
+                 <div id="l-map" class="layui-input-block"></div>
+                </div>
+
+
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-inline">
+                        <input type="button" lay-submit id="transmit" lay-filter="LAY-user-back-submit" value="确认" class="layui-btn">
+                        <button type="reset" class="layui-btn layui-btn-primary" onclick="javascript:history.go(-1)">返回</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="//api.map.baidu.com/api?v=2.0&ak=F8vGuQfxmqujWuykW3uqcG248vaTGRBS"></script>
+<script type="text/javascript">
+	// 百度地图API功能
+	function G(id) {
+		return document.getElementById(id);
+	}
+
+	var map = new BMap.Map("l-map");
+	map.centerAndZoom("广州",12);                   // 初始化地图,设置城市和地图级别。
+
+	var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
+		{"input" : "suggestId"
+		,"location" : map
+	});
+
+	ac.addEventListener("onhighlight", function(e) {  //鼠标放在下拉列表上的事件
+	var str = "";
+		var _value = e.fromitem.value;
+		var value = "";
+		if (e.fromitem.index > -1) {
+			value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+		}
+		str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+
+		value = "";
+		if (e.toitem.index > -1) {
+			_value = e.toitem.value;
+			value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+		}
+		str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+		G("searchResultPanel").innerHTML = str;
+	});
+
+	var myValue;
+	ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
+	var _value = e.item.value;
+		myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+		G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+
+		setPlace();
+	});
+
+	function setPlace(){
+		map.clearOverlays();    //清除地图上所有覆盖物
+		function myFun(){
+			var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
+		    $('input[name="jingdu"]').val(pp.lng);
+		    $('input[name="weidu"]').val(pp.lat);
+			map.centerAndZoom(pp, 18);
+			map.addOverlay(new BMap.Marker(pp));    //添加标注
+		}
+		var local = new BMap.LocalSearch(map, { //智能搜索
+		  onSearchComplete: myFun
+		});
+		local.search(myValue);
+		$('input[name="address"]').val(myValue);
+	}
+</script>
+<script>
+    layui.use(['upload','laydate','form'],function(){
+        var upload = layui.upload;
+        var form = layui.form;
+
+        //封面上传
+        upload.render({
+            elem: '#test1',
+            auto: false,
+            field:'pic',
+            //,multiple: true
+            bindAction: '#test1s',
+            done: function(res){
+              console.log(res)
+            }
+        });
+
+        //多图片上传
+        upload.render({
+            elem: '#test2',
+            url:"/admin/common/fileupload.html",
+            multiple:true,
+            number:6,
+            size:'3000',
+            choose: function(obj){
+                var files = obj.pushFile();
+                //预读本地文件示例，不支持ie8
+                obj.preview(function(index, file, result){
+                    str = '<div style="margin:0 10px" class="deledata"><img style="width:100px;margin:0 10px" src="'+ result +'" alt="'+ file.name +'" class="layui-upload-img"><div class="dele" style="text-align:center;border:1px solid #999;margin-top:5px;cursor:pointer">删除</div></div>';
+                    $('#demo2').append(str);
+                });
+                $('.add_img').remove();
+            },
+            done:function(res, index, upload){
+                console.log(res);
+                $('#demo2').append('<input class="add_img" type="hidden" name="files[]" value="'+res.link+'"/>');
+            }
+        });
+
+         layui.use('laydate',function(){
+                       var laydate = layui.laydate;
+
+                       laydate.render({
+                           elem: '#start_time', //指定元素
+                           type:'time',
+                       });
+
+                       laydate.render({
+                           elem: '#end_time', //指定元素
+                           type:'time',
+                       });
+                   })
+
+    });
+
+    //表单上传
+    fromUpload('form',"{:url('Goods/save')}");
+</script>

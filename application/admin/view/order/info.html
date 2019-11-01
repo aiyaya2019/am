@@ -1,0 +1,75 @@
+<include file='common/meta' />
+<style>
+    .hr-line-dashed{border-top:1px dashed #e7eaec;color:#fff;background-color:#fff;height:1px;margin:20px 0}
+</style>
+<div class="layui-fluid layadmin-homepage-fluid">
+    <div class="layui-row layui-col-space8">
+        <div class="layui-form" lay-filter="layuiadmin-form-admin">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-sm6 layui-col-md12">
+                    <div class="layui-card-header" style="background-color: #f2f2f2;border: 1px solid #e6e6e6">
+                        订单信息
+                    </div>
+                    <div class="layui-card layui-fluid">
+                        <div class=" layui-fluid" style="display: flex;height: 100%">
+                            <div class="layui-col-sm2">订单编号：{$data.order_sn}</div>
+                            <div class="layui-col-sm2">订单状态：{$data.status_name}</div>
+                            <div class="layui-col-sm2">下单时间：{$data.add_time}</div>
+                            <div class="layui-col-sm2">支付时间：{$data.pay_time}</div>
+                            <div class="layui-col-sm2">应付金额：&yen; {$data.total|default='0'}</div>
+                            <div class="layui-col-sm2">实付金额：&yen; {$data.price|default='0'}</div>
+                        </div>
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div class=" layui-fluid" style="display: flex;height: 100%">
+                            <div class="layui-col-sm2">优惠券：&yen; -{$data.coupon_price|default='0.00'}</div>
+                            <div class="layui-col-sm2">Bang权益：&yen; -{$data.bang_price|default='0.00'}</div>
+                            <div class="layui-col-sm2">取号：{$data.number|default=''}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="layui-form" lay-filter="layuiadmin-form-admin">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-sm6 layui-col-md12">
+                    <div class="layui-card-header" style="background-color: #f2f2f2;border: 1px solid #e6e6e6">
+                        服务信息
+                    </div>
+                    <div class="layui-card layui-fluid">
+                        <div class=" layui-fluid" style="display: flex;height: 100%">
+                            <div class="layui-col-sm2">门店：{$data.goods_name}</div>
+                            <div class="layui-col-sm2">理疗师：{$data.name}</div>
+                            <div class="layui-col-sm2">服务项目：{$data.project}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <if condition="$data.status eq 6">
+        <div class="layui-form " lay-filter="layuiadmin-form-admin">
+            <div class="layui-row layui-col-space15">
+                <div class="layui-col-sm6 layui-col-md12">
+                    <div class="layui-card-header" style="background-color: #f2f2f2;border: 1px solid #e6e6e6">
+                        其他信息
+                    </div>
+                    <div class="layui-card layui-fluid">
+                        <div style="display: flex;">
+                            <div class="layui-card-body layuiadmin-card-list">
+                                <p>取消原因：{$data.reason|default=''}</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </if>
+    </div>
+</div>
+<include file='common/edit' />

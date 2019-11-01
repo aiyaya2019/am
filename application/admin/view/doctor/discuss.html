@@ -1,0 +1,129 @@
+<include file='common/meta' />
+<style>
+    .layui-table-cell{  /*最后的pic为字段的field*/
+      height: 100%;
+      max-width: 100%;
+    } 
+</style>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">评论列表</div>
+
+                <!-- <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="app-content-list">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">理疗师名称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" placeholder="请输入理疗师名称" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn layuiadmin-btn-list" lay-submit="" lay-filter="LAY-app-contlist-search">
+                                <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div> -->
+
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="test-table-autowidth"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['table','form'],function(){
+        var table = layui.table;
+        var form = layui.form;
+        var url = "{:url('Doctor/discuss')}";
+
+        //监听搜索
+        form.on('submit(LAY-app-contlist-search)', function(data){
+            var field = data.field;
+            field.page = 1;
+            //执行重载
+            table.reload('test-table-autowidth', {
+                where: field
+            });
+        });
+
+        table.render({
+            elem: '#test-table-autowidth',
+            url:url,
+            method:'post',
+            response:{
+                statusCode:200
+            },
+            page:{
+                layout:['prev','page','next','skip','count']
+            },
+            where:{
+                id:"{:input('id')}",
+            },
+            limit:20,
+            toolbar:'#add',
+            defaultToolbar:false,
+            cols:[[
+                {field:'id',title:'编号',width:'4%'},
+                {field:'goods_name',title:'所属门店',width:'10%'},
+                {field:'name',title:'理疗师',width:'6%'},
+                {field:'nickname',title:'用户',width:'6%'},
+
+                 {title:'评论星级',width:"7%",templet:function(d){
+                    if(d.star == '1'){
+                       return '一星';
+                    } else if(d.star == '2') {
+                         return '2星';
+                    } else if(d.star == '3') {
+                         return '3星';
+                    } else if(d.star == '4') {
+                         return '4星';
+                    } else if(d.star == '5') {
+                         return '5星';
+                    }
+                }},
+                {field:'score',title:'评分',width:'4%'},
+                {field:'type',title:'评价类型',width:'7%'},
+                {field:'comp_name',title:'服务名称',width:'10%'},
+
+                {field:'pic',title:'图片'},
+                {field:'desc',title:'评论内容'},
+
+                {field:'is_show',title:'状态',width:"10%",templet:function(d){
+                    if(d.is_show == 1){
+                        return '<button class="layui-btn layui-btn-sm layui-btn-danger" onclick="update('+d.id+',2)">显示</button>';
+                    } else {
+                        return '<button class="layui-btn layui-btn-sm" onclick="update('+d.id+',1)">隐藏</button>';
+                    }
+                }},
+
+                {field:'add_time',title:'评论时间'},
+                // {
+                //     title:'操作',
+                //     width:'20%',
+                //     toolbar:'#barDemo'
+                // }
+            ]]
+        })
+    })
+</script>
+
+<!-- <script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs layui-btn-primary" lay-event="edit" href="{:url('Doctor/save')}?id={{d.id}}">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs delete" data-table="doctor" data-id="{{d.id}}" lay-event="del">删除</a>
+</script> -->
+
+
+<script>
+    function update(id,type)
+    {
+        var data = {
+            id:id,
+            is_show:type
+        };
+        get_request("{:url('Doctor/discussEdit')}",data);
+    }
+</script>

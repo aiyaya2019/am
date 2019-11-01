@@ -1,0 +1,89 @@
+<include file='common/meta' />
+<style>
+    .layui-table-cell{
+       height: 100%;
+        max-width: 100%;
+    }
+</style>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">广告列表</div>
+                <!-- <div class="layui-card-body">
+                    <blockquote class="layui-elem-quote">轮播以外同一位置的广告图只显示最新的一张</blockquote>
+                </div> -->
+                
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="test-table-autowidth"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['table','form'],function(){
+        var table = layui.table;
+        var form = layui.form;
+        var url = "{:url('banner/index')}";
+
+        //监听搜索
+        form.on('submit(LAY-app-contlist-search)', function(data){
+            var field = data.field;
+            field.page = 1;
+            //执行重载
+            table.reload('test-table-autowidth', {
+                where: field
+            });
+        });
+
+        table.render({
+            elem: '#test-table-autowidth',
+            url:url,
+            method:'post',
+            response:{
+                statusCode:200
+            },
+            skin:'line',
+            page:{
+                layout:['prev','page','next','skip','count']
+            },
+            where:{type:"{:input('type')}"},
+            limit:20,
+            toolbar:'#add',
+            defaultToolbar:false,
+            cols:[[
+                {field:'id',title:'编号',width:'4%',align:'center'},
+                {field:'title',title:'广告标题'},
+                {title:'广告图片',align:'center',templet:function(d){
+                    return '<div><img src="'+d.pic+'" style="width:50px" alt="" /></div>';
+                }},
+                // {title:'广告位置',templet:function(d){
+                //     if(d.type == 1){
+                //         return '首页轮播';
+                //     } else if(d.type == 2){
+                //         return '预约装修广告';
+                //     }
+                // }},
+                {field:'url',title:'地址'},
+                {field:'sort',title:'排序'},
+                {field:'add_time',title:'发布时间'},
+                {field:'update_time',title:'更新时间'},
+                {
+                    title:'操作',
+                    width:'7%',
+                    toolbar:'#barDemo'
+                }
+            ]]
+        })
+    })
+</script>
+
+<script type="text/html" id="barDemo">
+  <a class="layui-btn layui-btn-xs" lay-event="edit" href="{:url('Banner/save')}?id={{d.id}}">编辑</a>
+  <a class="layui-btn layui-btn-danger layui-btn-xs delete" data-table="banner" data-id="{{d.id}}" lay-event="del">删除</a>
+</script>
+
+<script type="text/html" id="add">
+  <a class="layui-btn layui-btn-xs" lay-event="edit" href="{:url('Banner/save')}">发布广告</a>
+</script>

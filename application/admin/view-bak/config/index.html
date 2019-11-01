@@ -1,0 +1,201 @@
+<include file='common/meta' />
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form" lay-filter="layuiadmin-form-admin" style="padding: 20px 30px 1px 0;">
+            <form action="" class="layui-form">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">门店名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" value="{$config.title}" autocomplete="off" placeholder="请输入门店名称" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">LOGO</label>
+                    <div class="layui-input-block layui-upload">
+                        <button type="button" class="layui-btn layui-btn-normal file" id="test1"><i class="layui-icon"></i>上传封面</button>
+                        <input class="layui-upload-file" type="file" accept="undefined" name="file" id="test1s">
+                        <span class="layui-inline layui-upload-choose">支持 png、jpg、jpeg 格式文件</span>
+                    </div>
+                    <div class="layui-input-block" style="margin-top:5px">
+                        <img style="width:70px" id="img" src="{$config.logo}" alt="">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">APPID</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="appid" value="{$config.appid}" autocomplete="off" placeholder="请输入APPID" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">AppSecret</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="appsecret" value="{$config.appsecret}" autocomplete="off" placeholder="请输入AppSecret" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">Mch_id</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="mchid" value="{$config.mchid}" autocomplete="off" placeholder="请输入商户号" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">KEY</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="key" value="{$config.key}" autocomplete="off" placeholder="请输入支付KEY" class="layui-input">
+                    </div>
+                </div>
+
+
+                 <div class="layui-form-item">
+                     <label class="layui-form-label">新用户首单</label>
+
+                     <div class="layui-input-inline">
+                         <input type="text" name="man"  value="{$config.man}" lay-verify="required" autocomplete="off" placeholder="押多少" class="layui-input">
+                     </div>
+                     <div class="layui-form-mid">减</div>
+                     <div class="layui-input-inline">
+                         <input type="text" name="jian"  value="{$config.jian}" lay-verify="required" autocomplete="off" placeholder="付多少" class="layui-input">
+                     </div>
+                 </div>
+
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">邀请好友奖</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="friend_money" value="{$config.friend_money}"  autocomplete="off" placeholder="请输入内容" class="layui-input">
+                    </div>
+                </div>
+
+                 <div class="layui-form-item">
+                   <label class="layui-form-label">是否开启新人优惠券</label>
+                   <div class="layui-input-block">
+
+                     <input type="radio" name="is_status" value="1" title="开启" <if condition="$config.is_status eq 1">checked<else /></if>>
+                     <input type="radio" name="is_status" value="2" title="不开启" <if condition="$config.is_status eq 2">checked<else /></if>>
+
+                   </div>
+                 </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">优惠券金额</label>
+
+                    <div class="layui-input-inline">
+                        <input type="text" name="new_coupon"  value="{$config.new_coupon}" lay-verify="required" autocomplete="off" placeholder="优惠券金额" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid">有效期</div>
+                    <div class="layui-input-inline">
+                        <input type="text" name="day"  value="{$config.day}" lay-verify="required" onkeyup="this.value=this.value.replace(/\D/g,'')" autocomplete="off" placeholder="有效天数" class="layui-input">
+                    </div>
+                     <div class="layui-form-mid">天</div>
+                </div>
+
+
+                 <div class="layui-form-item">
+                    <label class="layui-form-label">BANG权益开通价格</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="bang_price" value="{$config.bang_price}"  autocomplete="off" placeholder="请输入内容" class="layui-input">
+                    </div>
+                </div>
+
+                 <div class="layui-form-item">
+                    <label class="layui-form-label">BANG权益打几折</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="bang_zhe" value="{$config.bang_zhe}"  autocomplete="off" placeholder="请输入内容" class="layui-input">
+                    </div>
+                </div>
+
+                 <div class="layui-form-item">
+                    <label class="layui-form-label">客服名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="service_name" value="{$config.service_name}"  autocomplete="off" placeholder="请输入内容" class="layui-input">
+                    </div>
+                </div>
+
+                 <div class="layui-form-item">
+                   <label class="layui-form-label">工作时间</label>
+                   <if condition="$config.start_time neq 0">
+                   <div class="layui-input-inline">
+                       <input type="text" name="start_time" id="start_time" value="{$config.start_time|date='H:i:s',###}" lay-verify="required" autocomplete="off" placeholder="开始时间" class="layui-input">
+                   </div>
+                   <div class="layui-form-mid">-</div>
+                   <div class="layui-input-inline">
+                       <input type="text" name="end_time" id="end_time" value="{$config.end_time|date='H:i:s',###}" lay-verify="required" autocomplete="off" placeholder="结束时间" class="layui-input">
+                   </div>
+                   <else />
+                      <div class="layui-input-inline">
+                      <input type="text" name="start_time" id="start_time" value="" lay-verify="required" autocomplete="off" placeholder="开始时间" class="layui-input">
+                      </div>
+                      <div class="layui-form-mid">-</div>
+                      <div class="layui-input-inline">
+                          <input type="text" name="end_time" id="end_time" value="" lay-verify="required" autocomplete="off" placeholder="结束时间" class="layui-input">
+                      </div>
+                   </if>
+               </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-inline">
+                        <input type="button" lay-submit id="transmit" lay-filter="LAY-user-back-submit" value="确认" class="layui-btn">
+                        <!-- <button type="reset" class="layui-btn layui-btn-primary" onclick="javascript:history.go(-1)">返回</button> -->
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+  layui.use(['upload','laydate','form'],function(){
+        var upload = layui.upload;
+        var form = layui.form;
+          layui.use('laydate',function(){
+                               var laydate = layui.laydate;
+
+                               laydate.render({
+                                   elem: '#start_time', //指定元素
+                                   type:'time',
+                               });
+
+                               laydate.render({
+                                   elem: '#end_time', //指定元素
+                                   type:'time',
+                               });
+                           })
+        })
+    //表单上传
+    fromUpload('form',"{:url('Config/index')}",function(data){
+        if(data.code == 200){
+            layer.msg(data.msg,{time:1500});
+        } else {
+            layer.msg(data.msg,{time:3000});
+        }
+    });
+
+    //图片阅览
+    $('#test1').click(function(){
+        $('#test1s').click();
+    })
+    $('#test1s').change(function(e){
+        var imgBox = e.target;
+        var img = getObjectURL(imgBox.files[0]);
+        $('#img').attr('src',img);
+    });
+
+    //建立一個可存取到該file的url
+    function getObjectURL(file) {
+        var url = null;
+        if (window.createObjectURL != undefined) { // basic
+            url = window.createObjectURL(file);
+        } else if (window.URL != undefined) { // mozilla(firefox)
+            url = window.URL.createObjectURL(file);
+        } else if (window.webkitURL != undefined) { // webkit or chrome
+            url = window.webkitURL.createObjectURL(file);
+        }
+        return url;
+    }
+</script>

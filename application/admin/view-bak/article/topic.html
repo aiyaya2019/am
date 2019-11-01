@@ -1,0 +1,135 @@
+<include file='common/meta' />
+<style>
+    .layui-table-cell{  /*最后的pic为字段的field*/
+      height: 100%;
+      max-width: 100%;
+    } 
+</style>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">文章列表</div>
+
+                <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="app-content-list">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">文章标题</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="title" placeholder="请输入" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label">发布人</label>
+                            <div class="layui-input-inline">
+                                <select name="user_type" id="">
+                                    <option value="">全部</option>
+                                    <option value="1">管理员</option>
+                                    <option value="2">用户</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn layuiadmin-btn-list" lay-submit="" lay-filter="LAY-app-contlist-search">
+                                <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="test-table-autowidth"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['table','form'],function(){
+        var table = layui.table;
+        var form = layui.form;
+        var url = "{:url('Article/topic')}";
+
+        //监听搜索
+        form.on('submit(LAY-app-contlist-search)', function(data){
+            var field = data.field;
+            field.page = 1;
+            //执行重载
+            table.reload('test-table-autowidth', {
+                where: field
+            });
+        });
+
+        table.render({
+            elem: '#test-table-autowidth',
+            url:url,
+            method:'post',
+            response:{
+                statusCode:200
+            },
+            page:{
+                layout:['prev','page','next','skip','count']
+            },
+            limit:20,
+            toolbar:'#add',
+            defaultToolbar:false,
+            cols:[[
+                {field:'id',title:'编号',width:'4%'},
+                {title:'发布人',width:'8%',templet:function(d){
+                    if(d.user == null){
+                        return '管理员发布';
+                    } else {
+                        return '<img src="'+d.user.head_img+'" style="width:30px;margin-right:5px" alt="" />'+d.user.nickname;
+                    }
+                }},
+                {field:'title',title:'文章标题',width:'10%'},
+                {title:'文章视频',width:'7%',templet:function(d){
+                    if(d.video == ''){
+                        return '无视频';
+                    } else {
+                        return '<span style="color:#01AAED;cursor:pointer" class="video" data-url="'+d.video+'">[查看视频]</span>';
+                    }
+                }},
+                {field:'desc',title:'文章内容',width:'25%'},
+                {title:'浏览/收藏/评论',width:"8%",align:'center',templet:function(d){
+                    return d.scan+' / '+d.keep+' / '+d.discuss;
+                }},
+                {title:'置顶',width:"5%",align:'center',templet:function(d){
+                    if(d.is_top == 1){
+                        return '<button class="layui-btn layui-btn-sm odd" table="article" key="is_top" val="2" data-id="'+d.id+'">正常</button>';
+                    } else {
+                        return '<button class="layui-btn layui-btn-sm layui-btn-normal odd" table="article" key="is_top" val="1" data-id="'+d.id+'">置顶</button>';
+                    }
+                }},
+                {field:'add_time',title:'发布时间'},
+                {
+                    title:'操作',
+                    width:'15%',
+                    toolbar:'#barDemo'
+                }
+            ]]
+        })
+    })
+</script>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit" href="{:url('Article/save')}?id={{d.id}}&type=2">编辑</a>
+    <a class="layui-btn layui-btn-xs layui-btn-normal open" lay-event="edit" url="{:url('Article/goods')}?id={{d.id}}">设置商品</a>
+    <a class="layui-btn layui-btn-xs layui-btn-primary open" url="{:url('Article/discuss')}?aid={{d.id}}">评论</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs delete" data-table="article" data-id="{{d.id}}" lay-event="del">删除</a>
+</script>
+
+<script type="text/html" id="add">
+    <a class="layui-btn layui-btn-xs" lay-event="edit" href="{:url('Article/save')}?type=1">发布文章</a>
+</script>
+
+<script>
+    $('body').on('click','.video',function(){
+        var url = $(this).attr('data-url');
+        layer.open({
+            type:2,
+            area:['70%','80%'],
+            content:url
+        })
+    })
+</script>

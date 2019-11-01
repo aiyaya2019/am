@@ -1,0 +1,125 @@
+<include file='common/meta' />
+<style>
+    .layui-upload-img{width: 92px; height: 92px; margin: 0 10px 10px 0;border:1px solid #eee;}
+    .spec{float:right;width:80%;margin: 0 5px 10px 3px}
+    .remove{width:4% !important;margin:10px 0 0 0;color:#FF5722;cursor:pointer;}
+    .removes{color:#FF5722;cursor:pointer;}
+    .layui-input-inline{margin-right:2px !important;}
+    .layui-unselect{float:left;}
+    .pane{width:13% !important;}
+    #container {
+     height: 400px;
+    }
+</style>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form" lay-filter="layuiadmin-form-admin" style="padding: 20px 30px 1px 0;">
+            <form action="" class="layui-form">
+                <input type="hidden" name="id" id="goods_id" value="{:input('id')}">
+                <input type="hidden" name="pid" value="{:input('pid')}">
+                <input type="hidden" name="weidu" value="{$type.weidu}">
+                <input type="hidden" name="jingdu" value="{$type.jingdu}">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">城市/区域</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" value="{$type.title}" lay-verify="required" autocomplete="off" placeholder="请输入内容" class="layui-input" id="place">
+                    </div>
+                </div>
+                 <div class="layui-form-item">
+                    <label class="layui-form-label">排序</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="sort" value="{$type.sort}" lay-verify="required" autocomplete="off" placeholder="请输入内容" class="layui-input">
+                    </div>
+                </div>
+                <!-- <div class="layui-form-item">
+                    <label class="layui-form-label">输入地址</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="" value="" lay-verify="required" autocomplete="off" placeholder="请输入内容" id="place" class="layui-input">
+                    </div>
+                </div>-->
+                   <div class="layui-form-item">
+                        <label class="layui-form-label"></label>
+                        <div id="container" class="layui-input-block">
+
+                        </div>
+                  </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-inline">
+                        <input type="button" lay-submit id="transmit" lay-filter="LAY-user-back-submit" value="确认" class="layui-btn">
+                        <button type="reset" class="layui-btn layui-btn-primary" onclick="javascript:history.go(-1)">返回</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script charset="utf-8" src="https://map.qq.com/api/js?v=2.exp&key=OB4BZ-D4W3U-B7VVO-4PJWW-6TKDJ-WPB77&libraries=place"></script>
+<script>
+$(document).ready(function(){
+    init();
+})
+function init(){
+
+ var map = new qq.maps.Map(document.getElementById("container"),{
+        center:  new qq.maps.LatLng(39.916527,116.397128),
+        zoom: 13
+    });
+    //实例化自动完成
+    var ap = new qq.maps.place.Autocomplete(document.getElementById('place'));
+    var keyword = "";
+    //调用Poi检索类。用于进行本地检索、周边检索等服务。
+    var searchService = new qq.maps.SearchService({
+        complete : function(results){
+           if(results.type === "CITY_LIST") {
+                searchService.setLocation(results.detail.cities[0].cityName);
+                searchService.search(keyword);
+                return;
+            }
+            var pois = results.detail.pois;
+           $('input[name="weidu"]').val(pois[0]['latLng']['lat']);
+           $('input[name="jingdu"]').val(pois[0]['latLng']['lng']);
+
+            var latlngBounds = new qq.maps.LatLngBounds();
+            for(var i = 0,l = pois.length;i < l; i++){
+                var poi = pois[i];
+                latlngBounds.extend(poi.latLng);
+                var marker = new qq.maps.Marker({
+                    map:map,
+                    position: poi.latLng
+                });
+
+                marker.setTitle(poi.name);
+            }
+            map.fitBounds(latlngBounds);
+        }
+    });
+    //添加监听事件
+    qq.maps.event.addListener(ap, "confirm", function(res){
+        keyword = res.value;
+        searchService.search(keyword);
+    });
+}
+</script>
+<script>
+    layui.use(['upload','laydate','form'],function(){
+        var upload = layui.upload;
+        var form = layui.form;
+
+        //封面上传
+        upload.render({
+            elem: '#test1',
+            auto: false,
+            field:'pic',
+            //,multiple: true
+            bindAction: '#test1s',
+            done: function(res){
+              console.log(res)
+            }
+        });
+
+    });
+
+    //表单上传
+    fromUpload('form',"{:url('Goods/type_save')}");
+</script>

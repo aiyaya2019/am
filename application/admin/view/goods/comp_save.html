@@ -1,0 +1,83 @@
+<include file='common/meta' />
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form" lay-filter="layuiadmin-form-admin" style="padding: 20px 30px 1px 0;">
+            <form action="" class="layui-form">
+                <input type="hidden" name="id" value="{:input('id')}">
+                <input type="hidden" name="goods_id" value="{:input('pid')}">
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">标题</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" value="{$list.title}" lay-verify="required" autocomplete="off" placeholder="请输入内容" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">图片</label>
+                    <div class="layui-input-block layui-upload">
+                        <button type="button" class="layui-btn layui-btn-normal file" id="test2"><i class="layui-icon"></i>上传图片</button>
+                        <input class="layui-upload-file" type="file" name="pic" id="test2s" >
+                        <span class="layui-inline layui-upload-choose">仅支持 jpg png jpeg 格式文件</span>
+                    </div>
+                     <label class="layui-form-label"></label>
+                    <div style="margin-top:10px" id="video_val">
+                        <img src="{$list.pic}" style="width:200px" id="img">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">价格</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="price" value="{$list.price}" lay-verify="required" autocomplete="off" placeholder="请输入内容" class="layui-input">
+                    </div>
+                </div>
+
+                 <div class="layui-form-item">
+                    <label class="layui-form-label">服务时间</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="time" value="{$list.time}" lay-verify="required" autocomplete="off"  onkeyup="this.value=this.value.replace(/\D/g,'')" placeholder="请输入服务时间，单位：分钟" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">描述</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="desc" value="{$list.desc}" lay-verify="required" autocomplete="off" placeholder="请输入内容" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-inline">
+                        <input type="button" lay-submit id="transmit" lay-filter="LAY-user-back-submit" value="确认" class="layui-btn">
+                        <button type="reset" class="layui-btn layui-btn-primary" onclick="javascript:history.go(-1)">返回</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['upload','laydate','form'],function(){
+        var upload = layui.upload;
+        var form = layui.form;
+
+        //封面上传
+        upload.render({
+            elem: '#test2',
+            auto: false,
+            field:'pic',
+            accept:'image',
+            acceptMime:'image/png,image/jpg,image/jpeg',
+            //,multiple: true
+            bindAction: '#test2s',
+            done: function(res){
+              console.log(res)
+            }
+        });
+
+    });
+    //表单上传
+    fromUpload('form',"{:url('Goods/comp_save')}");
+</script>

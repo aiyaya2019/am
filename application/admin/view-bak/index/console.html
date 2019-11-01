@@ -1,0 +1,82 @@
+<!-- 引入头部 -->
+<include file='common/meta' />
+
+<body>
+    <div class="layui-fluid">
+        <div class="layui-row layui-col-space15">
+            <div class="layui-col-sm6 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        商品数量
+                        <span class="layui-badge layui-bg-blue layuiadmin-badge">今日</span>
+                    </div>
+                    <div class="layui-card-body layuiadmin-card-list">
+	                    <p class="layuiadmin-big-font">{$goods_day} <span style="font-size:14px">/件</span></p>
+	                    <p>
+	                        总商品数量 
+	                        <span class="layuiadmin-span-color">{$goods}/件 <i class="layui-inline layui-icon layui-icon-flag"></i></span>
+	                    </p>
+                	</div>
+            	</div>
+        	</div>
+
+        	<div class="layui-col-sm6 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        用户数量
+                        <span class="layui-badge layui-bg-blue layuiadmin-badge">今日</span>
+                    </div>
+                    <div class="layui-card-body layuiadmin-card-list">
+	                    <p class="layuiadmin-big-font">{$user_day} <span style="font-size:14px">/人</span></p>
+	                    <p>
+	                        总用户数量 
+	                        <span class="layuiadmin-span-color">{$user}/人 <i class="layui-inline layui-icon layui-icon-flag"></i></span>
+	                    </p>
+                	</div>
+            	</div>
+        	</div>
+
+        	<div class="layui-col-sm6 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        活动数量
+                        <span class="layui-badge layui-bg-blue layuiadmin-badge">今日</span>
+                    </div>
+                    <div class="layui-card-body layuiadmin-card-list">
+	                    <p class="layuiadmin-big-font">{$activity_day} <span style="font-size:14px">/场</span></p>
+	                    <p>
+	                        总活动数量 
+	                        <span class="layuiadmin-span-color">{$activity}/场 <i class="layui-inline layui-icon layui-icon-flag"></i></span>
+	                    </p>
+                	</div>
+            	</div>
+        	</div>
+
+        	<div class="layui-col-sm6 layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-header">
+                        文章数量
+                        <span class="layui-badge layui-bg-blue layuiadmin-badge">今日</span>
+                    </div>
+                    <div class="layui-card-body layuiadmin-card-list">
+	                    <p class="layuiadmin-big-font">{$article_day} <span style="font-size:14px">/篇</span></p>
+	                    <p>
+	                        总文章数量 
+	                        <span class="layuiadmin-span-color">{$article}/篇 <i class="layui-inline layui-icon layui-icon-flag"></i></span>
+	                    </p>
+                	</div>
+            	</div>
+        	</div>
+
+		</div>
+    </div>
+
+</body>
+
+<script type="text/javascript">
+    layui.config({
+        base: "__LAYUI__/" //静态资源所在路径
+    }).extend({
+        index: 'lib/index' //主入口模块
+    }).use(['index', 'sample']);
+</script>

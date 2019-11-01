@@ -1,0 +1,54 @@
+<include file='common/meta' />
+
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form" lay-filter="layuiadmin-form-admin" style="padding: 20px 30px 1px 0;">
+            <form action="" class="layui-form">
+                <input type="hidden" name="uid" value="{:input('id')}">
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">粉丝昵称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="nickname" value="" lay-verify="required" autocomplete="off" placeholder="请输入广告标题" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">粉丝头像</label>
+                    <div class="layui-input-block layui-upload">
+                        <button type="button" class="layui-btn layui-btn-normal file" id="test1"><i class="layui-icon"></i>上传头像</button>
+                        <input class="layui-upload-file" type="file" accept="undefined" id="test1s">
+                        <span class="layui-inline layui-upload-choose">支持 png、jpg、jpeg 格式文件</span>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-inline">
+                        <input type="button" lay-submit id="transmit" lay-filter="LAY-user-back-submit" value="确认" class="layui-btn">
+                        <button type="reset" class="layui-btn layui-btn-primary" onclick="javascript:history.go(-1)">返回</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<include file='common/edit' />
+<script>
+    layui.use(['upload','laydate'],function(){
+        var upload = layui.upload;
+
+        //封面上传
+        upload.render({
+            elem: '#test1',
+            auto: false,
+            field:'pic',
+            //,multiple: true
+            bindAction: '#test1s',
+            done: function(res){
+              console.log(res)
+            }
+        });
+    })
+    //表单上传
+    fromUpload('form',"{:url('User/save')}");
+</script>

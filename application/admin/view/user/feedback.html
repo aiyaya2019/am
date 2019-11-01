@@ -1,0 +1,98 @@
+<include file='common/meta' />
+<style>
+    .laytable-cell-1-0-2,.laytable-cell-1-0-5{  /*最后的pic为字段的field*/
+      height: 100%;
+      max-width: 100%;
+    }
+</style>
+<div class="layui-fluid">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">投诉反馈</div>
+                <div class="layui-form layui-card-header layuiadmin-card-header-auto" lay-filter="app-content-list">
+                    <div class="layui-form-item">
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">理疗师</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="name" placeholder="请输入理疗师" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+                            <button class="layui-btn layuiadmin-btn-list" lay-submit="" lay-filter="LAY-app-contlist-search">
+                                <i class="layui-icon layui-icon-search layuiadmin-button-btn"></i>
+                            </button>
+                        </div>
+                        <!--<div class="layui-inline">
+                            <a href="{:url('User/user_excel')}"><button class="layui-btn layui-btn-normal">导出数据</button></a>
+                        </div>-->
+                    </div>
+                </div>
+                <div class="layui-card-body">
+                    <table class="layui-hide" id="test-table-autowidth"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    layui.use(['table','form'],function(){
+        var table = layui.table;
+        var form = layui.form;
+
+        //监听搜索
+        form.on('submit(LAY-app-contlist-search)', function(data){
+            var field = data.field;
+            field.page = 1;
+            //执行重载
+            table.reload('test-table-autowidth', {
+                where: field
+            });
+        });
+
+        table.render({
+            elem: '#test-table-autowidth',
+            url:"{:url('User/feedback')}",
+            method:'post',
+            response:{
+                statusCode:200
+            },
+            page:{
+                layout:['prev','page','next','skip','count']
+            },
+            limit:20,
+            defaultToolbar:false,
+            cols:[[
+                {field:'id',title:'编号',width:'4%'},
+                {field:'nickname',title:'用户信息',width:'15%',templet:function(d){
+                       return '<img src="'+d.user.head_img+'" alt="" style="width:30px;height:30px;margin-right:10px" />'+'<span>'+d.user.nickname+'';
+                  }},
+                {field:'title',title:'反馈类型'},
+                {field:'name',title:'理疗师'},
+                {field:'phone',title:'手机号码'},
+                {field:'add_time',title:'反馈时间'},
+                {
+                    title:'操作',
+                    width:'10%',
+                    toolbar:'#barDemo'
+                }
+            ]]
+        })
+    })
+</script>
+
+
+<script>
+    function update(id,type)
+    {
+        var data = {
+            uid:id,
+            status:type
+        };
+        get_request("{:url('User/edit')}",data);
+    }
+</script>
+<script type="text/html" id="barDemo">
+<a class="layui-btn layui-btn-xs layui-btn-normal open" url="{:url('User/feedback_details')}?id={{d.id}}">详情</a>
+</script>

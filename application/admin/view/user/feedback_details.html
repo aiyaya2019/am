@@ -1,0 +1,106 @@
+<include file='common/meta' />
+<style>
+    .layui-upload-img{width: 92px; height: 92px; margin: 0 10px 10px 0;border:1px solid #eee;}
+    .spec{float:right;width:80%;margin: 0 5px 10px 3px}
+    .remove{width:4% !important;margin:10px 0 0 0;color:#FF5722;cursor:pointer;}
+    .removes{color:#FF5722;cursor:pointer;}
+    .layui-input-inline{margin-right:2px !important;}
+    .layui-unselect{float:left;}
+    .pane{width:13% !important;}
+</style>
+<div class="layui-fluid">
+    <div class="layui-card">
+        <div class="layui-form" lay-filter="layuiadmin-form-admin" style="padding: 20px 30px 1px 0;">
+            <form action="" class="layui-form">
+                <input type="hidden" name="id" value="{:input('id')}">
+
+
+
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">反馈类型</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" value="{$feedback.title}"  autocomplete="off"  disabled placeholder="请输入内容" class="layui-input">
+                    </div>
+                </div>
+
+                    <div class="layui-form-item">
+                      <label class="layui-form-label">理疗师</label>
+                      <div class="layui-input-block">
+                          <input type="text" name="name" value="{$feedback.name}" autocomplete="off" disabled placeholder="请输入内容" class="layui-input">
+                      </div>
+                   </div>
+                   <div class="layui-form-item">
+                     <label class="layui-form-label">电话</label>
+                     <div class="layui-input-block">
+                         <input type="text" name="phone" value="{$feedback.phone}"  autocomplete="off" disabled placeholder="请输入内容" class="layui-input">
+                     </div>
+                 </div>
+
+                   <div class="layui-form-item">
+                      <label class="layui-form-label">取号状态</label>
+                      <div class="layui-input-block">
+                        <input type="radio" name="type" value="已取号" title="已取号" <if condition="$feedback.type eq 1">checked</if>>
+                        <input type="radio" name="type" value="未取号" title="未取号" <if condition="$feedback.type eq 2">checked</if>>
+                      </div>
+                    </div>
+                <div class="layui-form-item">
+                        <label class="layui-form-label">反馈图片</label>
+                        <div class="layui-input-block layui-upload">
+                            <div class="layui-upload">
+
+
+                                <blockquote class="layui-elem-quote layui-quote-nm" style="margin-top: 10px;">
+                                    预览图：
+                                    <div class="layui-upload-list">
+                                        <div style="display: flex;" id="demo2">
+
+                                            <foreach name="$feedback.images" item="vo">
+                                                <div style="margin:0 10px" class="deledata">
+                                                    <img style="width:100px;margin:0 10px" src="{$vo}" alt="" class="layui-upload-img">
+
+                                                    <input type="hidden" name="files[]" value="{$vo}"/>
+                                                </div>
+                                            </foreach>
+
+                                        </div>
+                                    </div>
+                                </blockquote>
+                            </div>
+                        </div>
+                    </div>
+                 <div class="layui-form-item">
+                      <label class="layui-form-label">反馈内容</label>
+                      <div class="layui-input-block">
+                          <textarea placeholder="请输入内容" lay-verify="required" name="content" class="layui-textarea edit">{$feedback.content}</textarea>
+                      </div>
+                  </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-inline">
+
+                        <button  class="layui-btn layui-btn-primary" onclick="back()">返回</button>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+layui.use('form', function(){
+    var form = layui.form;
+
+    });
+
+    //表单上传
+    fromUp('form',"{:url('Shop/search_save')}");
+   function back()
+   {
+
+       var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+
+       parent.layer.close(index); //再执行关闭
+   }
+</script>
